@@ -6,9 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configuración de la conexión a MySQL (XAMPP)
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -16,37 +14,71 @@ const db = mysql.createConnection({
     database: 'plataforma_streaming'
 });
 
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Conectado a la base de datos MySQL');
-});
-
-// Registro de Administradores
-app.post('/registrar-admin', (req, res) => {
-    const { nombre, ap_paterno, ap_materno, correo, clave } = req.body;
-    const sql = "INSERT INTO administradores (nombre, apellido_paterno, apellido_materno, correo_electronico, clave) VALUES (?, ?, ?, ?, ?)";
-    
-    db.query(sql, [nombre, ap_paterno, ap_materno, correo, clave], (err, result) => {
-        if (err) return res.status(500).send(err);
-        res.send({ message: 'Administrador registrado con éxito' });
-    });
-});
-
-// Login
+// --- RUTA DE LOGIN (Faltaba en tu archivo) ---
 app.post('/login', (req, res) => {
     const { usuario, password } = req.body;
+    
+    // Consulta para verificar administradores activos
     const sql = "SELECT * FROM administradores WHERE correo_electronico = ? AND clave = ? AND estado = 'Activo'";
     
-    db.query(sql, [usuario, password], (err, result) => {
-        if (err) return res.status(500).send(err);
-        if (result.length > 0) {
-            res.send({ auth: true, user: result[0] });
+    db.query(sql, [usuario, password], (err, results) => {
+        if (err) return res.status(500).send({ auth: false, message: 'Error en el servidor' });
+        
+        if (results.length > 0) {
+            // Login exitoso
+            res.send({ auth: true, user: results[0] });
         } else {
-            res.send({ auth: false, message: 'Credenciales incorrectas' });
+            // Credenciales incorrectas o usuario inactivo
+            res.status(401).send({ auth: false, message: 'Correo o contraseña incorrectos' });
         }
     });
 });
 
-app.listen(3000, () => {
-    console.log('Servidor corriendo en http://localhost:3000');
+// (Registro de Usuarios)
+app.post('/registrar-admin', (req, res) => {
+    const { nombre, ap_paterno, ap_materno, correo, clave } = req.body;
+    const sql = "INSERT INTO administradores (nombre, apellido_paterno, apellido_materno, correo_electronico, clave) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [nombre, ap_paterno, ap_materno, correo, clave], (err) => {
+        if (err) return res.status(500).send(err);
+        res.send({ message: 'Administrador guardado' });
+    });
 });
+
+// (Registro y Consulta) 
+app.post('/registrar-peli', (req, res) => {
+    const { nombre, genero, url, descripcion } = req.body;
+    const sql = "INSERT INTO peliculas (nombre_pelicula, genero, video_url, descripcion) VALUES (?, ?, ?, ?)";
+    db.query(sql, [nombre, genero, url, descripcion], (err) => {
+        if (err) return res.status(500).send(err);
+        res.send({ message: 'Película registrada' });
+    });
+});
+
+app.get('/peliculas', (req, res) => {
+    db.query("SELECT * FROM peliculas", (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.send(results);
+    });
+});
+
+// CLIENTES (Consulta)
+app.get('/clientes', (req, res) => {
+    db.query("SELECT * FROM clientes", (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.send(results);
+    });
+});
+
+// (Activar/Inactivar/Eliminar)
+app.put('/cambiar-estado/:tabla/:id', (req, res) => {
+    const { tabla, id } = req.params;
+    const { nuevoEstado } = req.body;
+    const idCol = tabla === 'peliculas' ? 'id_pelicula' : 'id_cliente';
+    const sql = `UPDATE ${tabla} SET estado = ? WHERE ${idCol} = ?`;
+    db.query(sql, [nuevoEstado, id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.send({ message: 'Estado actualizado' });
+    });
+});
+
+app.listen(3000, () => console.log('Servidor Peli-Ya en puerto 3000'));
