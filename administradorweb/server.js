@@ -7,13 +7,17 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Usar la variable de entorno de Render o los valores locales para pruebas
+// Reemplaza la configuración de db en server.js
 const db = mysql.createConnection(process.env.DATABASE_URL || {
     host: 'localhost',
     user: 'root',
     password: '', 
-    database: 'plataforma_streaming'
+    database: 'plataforma_streaming',
+    ssl: {
+        rejectUnauthorized: false // Esto permite la conexión segura con TiDB
+    }
 });
+
 const path = require('path');
 
 // Esto le dice a Express que sirva los archivos de la carpeta actual
