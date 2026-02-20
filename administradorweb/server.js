@@ -6,16 +6,19 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-// Reemplaza la configuración de db en server.js
-const db = mysql.createConnection(process.env.DATABASE_URL || {
-    host: 'localhost',
-    user: 'root',
+
+const db = mysql.createConnection({
+    host: 'gateway01.us-east-1.prod.aws.tidbcloud.com',
+    port: 4000,
+    user: '3Kc64iujHhxTgGY.root',
     password: '', 
     database: 'plataforma_streaming',
     ssl: {
-        rejectUnauthorized: false // Esto permite la conexión segura con TiDB
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
     }
 });
+
 const path = require('path');
 
 // Esto le dice a Express que sirva los archivos de la carpeta actual
