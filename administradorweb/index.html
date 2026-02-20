@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peli-Ya - Panel de Administración</title>
+    <title>Panel de Administración</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,101 +25,70 @@
 
     <div id="admin-panel" class="container" style="display: none;">
         <header>
-            <h1>Plataforma de Streaming - Peli-Ya</h1>
+            <h1>Peli-Ya Admin</h1>
             <nav>
-                <button onclick="mostrarSeccion('reg-peli')">Registrar nueva película</button>
+                <button onclick="mostrarSeccion('reg-peli')">Registrar Película</button>
                 <button onclick="mostrarSeccion('con-peli')">Consultar Películas</button>
-                <button onclick="mostrarSeccion('con-clie')">Consultar clientes</button>
-                <button onclick="mostrarSeccion('reg-user')">Registro de usuarios</button>
+                <button onclick="mostrarSeccion('con-clie')">Consultar Clientes</button>
+                <button onclick="mostrarSeccion('reg-user')">Gestión de Administradores</button>
             </nav>
         </header>
 
-        <hr>
-
         <section id="reg-peli" class="content-section">
             <div class="form-container">
-                <label>Nombre de la película</label>
-                <input type="text" id="peli-nom">
-
-                <label>Seleccionar Género</label>
-                <select id="peli-gen">
-                    <option value="Acción">Acción</option>
-                    <option value="Comedia">Comedia</option>
-                    <option value="Terror">Terror</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Ciencia Ficción">Ciencia Ficción</option>
-                </select>
-
-                <label>URL de la Película (Video)</label>
-                <input type="url" id="peli-url" placeholder="https://ejemplo.com/video.mp4">
-
-                <label>Cargar Imagen (URL de portada)</label>
-                <input type="text" id="peli-img" placeholder="URL de la imagen">
-
-                <label>Descripción</label>
-                <textarea id="peli-desc" placeholder="Escribe una breve reseña..."></textarea>
-
+                <div class="form-group"><label>Nombre</label><input type="text" id="peli-nom"></div>
+                <div class="form-group"><label>Género</label><input type="text" id="peli-gen"></div>
+                <div class="form-group"><label>URL Video</label><input type="text" id="peli-url"></div>
+                <div class="form-group"><label>URL Imagen</label><input type="text" id="peli-img"></div>
+                <div class="form-group full-width"><label>Descripción</label><textarea id="peli-desc"></textarea></div>
                 <button class="btn-save" onclick="guardarPelicula()">Guardar Película</button>
             </div>
         </section>
 
         <section id="con-peli" class="content-section" style="display: none;">
-            <h2>Listado de Películas</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>IMAGEN</th>
-                        <th>NOMBRE DE LA PELÍCULA</th>
-                        <th>GÉNERO</th>
-                        <th>ESTADO</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-peliculas-body">
-                    </tbody>
+                <thead><tr><th>Portada</th><th>Título</th><th>Género</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody id="tabla-peliculas-body"></tbody>
             </table>
         </section>
 
         <section id="con-clie" class="content-section" style="display: none;">
-            <h2>Clientes Registrados (App Móvil)</h2>
+            <div id="edit-client-area" style="display:none; background:#eee; padding:15px; margin-bottom:15px; border-radius:8px;">
+                <h3>Editar Cliente</h3>
+                <input type="text" id="ed-clie-nom" placeholder="Nombre">
+                <input type="text" id="ed-clie-pat" placeholder="Apellido P.">
+                <input type="email" id="ed-clie-mail" placeholder="Correo">
+                <button onclick="ejecutarActualizacionCliente()">Actualizar</button>
+                <button onclick="document.getElementById('edit-client-area').style.display='none'">Cancelar</button>
+            </div>
             <table>
-                <thead>
-                    <tr>
-                        <th>Nombre completo</th>
-                        <th>Correo / Usuario</th>
-                        <th>Fecha de Registro</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-clientes-body">
-                    </tbody>
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Registro</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody id="tabla-clientes-body"></tbody>
             </table>
         </section>
 
         <section id="reg-user" class="content-section" style="display: none;">
             <div class="form-grid">
-                <div class="inputs-admin">
-                    <label>Nombre</label>
-                    <input type="text" id="adm-nom">
-                    
-                    <label>Apellido Paterno</label>
-                    <input type="text" id="adm-pat">
-                    
-                    <label>Apellido Materno</label>
-                    <input type="text" id="adm-mat">
-                    
-                    <label>Correo electrónico</label>
-                    <input type="email" id="adm-mail">
+                <div>
+                    <label>Nombre</label><input type="text" id="adm-nom">
+                    <label>Apellido P.</label><input type="text" id="adm-pat">
+                    <label>Apellido M.</label><input type="text" id="adm-mat">
+                    <label>Correo</label><input type="email" id="adm-mail">
                 </div>
-                <div class="key-section">
+                <div>
                     <label>Clave</label>
                     <input type="text" id="adm-clave" readonly value="y76qwer">
-                    <button class="btn-update" onclick="generarClave()">Generar Nueva</button>
+                    <button onclick="generarClave()">Nueva Clave</button>
                 </div>
             </div>
-            <button class="btn-save" onclick="registrarAdmin()">Registrar Administrador</button>
+            <button id="btn-admin-main" class="btn-save" onclick="registrarAdmin()">Registrar Administrador</button>
+            <hr>
+            <h3>Lista de Administradores</h3>
+            <table>
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody id="tabla-admins-body"></tbody>
+            </table>
         </section>
-
     </div>
 
     <script src="app.js"></script>
