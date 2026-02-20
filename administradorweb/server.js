@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     host: 'gateway01.us-east-1.prod.aws.tidbcloud.com',
     port: 4000,
     user: '3Kc64iujHhxTgGY.root',
-    password: '', 
+    password: 'FJsB5RwKkvdGiLOw', 
     database: 'plataforma_streaming',
     ssl: {
         minVersion: 'TLSv1.2',
