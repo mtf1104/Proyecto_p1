@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection(process.env.DATABASE_URL || {
     host: 'localhost',
     user: 'root',
-    password: '', 
+    password: ' ', 
     database: 'plataforma_streaming'
 });
 const path = require('path');
