@@ -17,7 +17,6 @@ const db = mysql.createConnection(process.env.DATABASE_URL || {
         rejectUnauthorized: false // Esto permite la conexión segura con TiDB
     }
 });
-
 const path = require('path');
 
 // Esto le dice a Express que sirva los archivos de la carpeta actual
