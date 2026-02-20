@@ -7,7 +7,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const db = mysql.createConnection({
+// Usar la variable de entorno de Render o los valores locales para pruebas
+const db = mysql.createConnection(process.env.DATABASE_URL || {
     host: 'localhost',
     user: 'root',
     password: '', 
