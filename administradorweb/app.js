@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:3000";
+// Se inicializa como cadena vacía para que el navegador use el dominio actual (Render)
+const API_URL = ""; 
 let editPeliId = null;
 let editAdminId = null;
 let editClientId = null;
