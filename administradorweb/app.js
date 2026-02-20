@@ -1,4 +1,4 @@
-const API_URL = window.location.origin; 
+const API_URL = "https://proyecto-p1.onrender.com"; 
 let editPeliId = null;
 let editAdminId = null;
 let editClientId = null;
