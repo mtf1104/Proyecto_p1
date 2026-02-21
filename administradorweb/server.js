@@ -161,12 +161,13 @@ app.get('/buscar-peli', (req, res) => {
     });
 });
 
-// --- AUTENTICACIÓN Y REGISTRO DE CLIENTES ---
+// --- AUTENTICACIÓN Y REGISTRO DE CLIENTES CORREGIDO ---
 
 // Registrarse como cliente
 app.post('/registro-cliente', (req, res) => {
     const { nombre, apellido_p, apellido_m, correo, clave } = req.body;
-    const sql = "INSERT INTO clientes (nombre, apellido_paterno, apellido_materno, correo, clave) VALUES (?, ?, ?, ?, ?)";
+    // SE CAMBIÓ 'clave' POR 'clave_acceso' PARA COINCIDIR CON EL SQL
+    const sql = "INSERT INTO clientes (nombre, apellido_paterno, apellido_materno, correo, clave_acceso) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [nombre, apellido_p, apellido_m, correo, clave], (err) => {
         if (err && err.code === 'ER_DUP_ENTRY') return res.status(400).send({ message: 'El correo ya está registrado' });
         if (err) return res.status(500).send(err);
@@ -177,7 +178,8 @@ app.post('/registro-cliente', (req, res) => {
 // Iniciar sesión como cliente
 app.post('/login-cliente', (req, res) => {
     const { correo, clave } = req.body;
-    const sql = "SELECT id_cliente, nombre, correo FROM clientes WHERE correo = ? AND clave = ? AND estado = 'Activo'";
+    // SE CAMBIÓ 'clave' POR 'clave_acceso'
+    const sql = "SELECT id_cliente, nombre, correo FROM clientes WHERE correo = ? AND clave_acceso = ? AND estado = 'Activo'";
     db.query(sql, [correo, clave], (err, results) => {
         if (err) return res.status(500).send({ auth: false, message: 'Error en el servidor' });
         if (results.length > 0) {
@@ -187,5 +189,6 @@ app.post('/login-cliente', (req, res) => {
         }
     });
 });
+
 
 app.listen(3000, () => console.log('Servidor Peli-Ya listo en puerto 3000'));
