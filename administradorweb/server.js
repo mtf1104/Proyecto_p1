@@ -138,4 +138,54 @@ app.delete('/eliminar/:tabla/:id', (req, res) => {
     });
 });
 
+// --- BÚSQUEDAS Y CONSULTAS DE PELÍCULAS ---
+
+// Consultar película por ID
+app.get('/peliculas/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM peliculas WHERE id_pelicula = ?";
+    db.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).send(err);
+        if (results.length === 0) return res.status(404).send({ message: 'Película no encontrada' });
+        res.send(results[0]);
+    });
+});
+
+// Consultar película por nombre (Búsqueda parcial)
+app.get('/buscar-peli', (req, res) => {
+    const { nombre } = req.query;
+    const sql = "SELECT * FROM peliculas WHERE nombre_pelicula LIKE ?";
+    db.query(sql, [`%${nombre}%`], (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.send(results);
+    });
+});
+
+// --- AUTENTICACIÓN Y REGISTRO DE CLIENTES ---
+
+// Registrarse como cliente
+app.post('/registro-cliente', (req, res) => {
+    const { nombre, apellido_p, apellido_m, correo, clave } = req.body;
+    const sql = "INSERT INTO clientes (nombre, apellido_paterno, apellido_materno, correo, clave) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [nombre, apellido_p, apellido_m, correo, clave], (err) => {
+        if (err && err.code === 'ER_DUP_ENTRY') return res.status(400).send({ message: 'El correo ya está registrado' });
+        if (err) return res.status(500).send(err);
+        res.send({ message: 'Registro exitoso' });
+    });
+});
+
+// Iniciar sesión como cliente
+app.post('/login-cliente', (req, res) => {
+    const { correo, clave } = req.body;
+    const sql = "SELECT id_cliente, nombre, correo FROM clientes WHERE correo = ? AND clave = ? AND estado = 'Activo'";
+    db.query(sql, [correo, clave], (err, results) => {
+        if (err) return res.status(500).send({ auth: false, message: 'Error en el servidor' });
+        if (results.length > 0) {
+            res.send({ auth: true, user: results[0] });
+        } else {
+            res.status(401).send({ auth: false, message: 'Credenciales inválidas o cuenta inactiva' });
+        }
+    });
+});
+
 app.listen(3000, () => console.log('Servidor Peli-Ya listo en puerto 3000'));

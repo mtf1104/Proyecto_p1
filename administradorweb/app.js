@@ -268,3 +268,50 @@ function refrescarTabla(tabla) {
     if (tabla === 'clientes') cargarClientes();
     if (tabla === 'administradores') cargarAdministradores();
 }
+
+// Buscar por nombre (puedes llamarlo desde un input de búsqueda)
+async function buscarPeliculaPorNombre(nombre) {
+    const res = await fetch(`${API_URL}/buscar-peli?nombre=${nombre}`);
+    const data = await res.json();
+    // Aquí puedes redirigir la 'data' a una función que renderice los resultados
+    console.log("Resultados de búsqueda:", data);
+}
+
+// Consultar una sola por ID
+async function obtenerDetallePelicula(id) {
+    const res = await fetch(`${API_URL}/peliculas/${id}`);
+    const peli = await res.json();
+    return peli;
+}
+
+// Registro de cliente
+async function registrarClienteNuevo(datos) {
+    // datos = { nombre, apellido_p, apellido_m, correo, clave }
+    const res = await fetch(`${API_URL}/registro-cliente`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+    });
+    const data = await res.json();
+    alert(data.message);
+}
+
+// Login de cliente
+async function loginCliente() {
+    const correo = document.getElementById('client-email').value;
+    const clave = document.getElementById('client-pass').value;
+
+    const res = await fetch(`${API_URL}/login-cliente`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, clave })
+    });
+
+    const data = await res.json();
+    if (data.auth) {
+        alert(`Bienvenido, ${data.user.nombre}`);
+        // Redirigir a la vista de películas para usuarios
+    } else {
+        alert(data.message);
+    }
+}
