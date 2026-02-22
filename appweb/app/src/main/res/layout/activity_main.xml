@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:gravity="center"
+    android:background="@drawable/btn_moderno">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_marginBottom="40dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Usuario"
+        android:layout_marginStart="5dp"/>
+
+    <EditText
+        android:id="@+id/etUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ejemplo@correo.com"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="15dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contraseña"
+        android:layout_marginStart="5dp"/>
+
+    <EditText
+        android:id="@+id/etClave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="********"
+        android:inputType="textPassword"
+        android:layout_marginBottom="30dp" />
+
+    <Button
+        android:id="@+id/btnIngresar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Ingresar"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#0084FF"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvRegistrarme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrarme"
+        android:textColor="#0084FF"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="14sp" />
+
+
+
+</LinearLayout>

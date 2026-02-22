@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.Peli_ya" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:windowBackground">@drawable/bg_main</item>
+        <item name="android:textColorPrimary">@color/text_main</item>
+    </style>
+
+    <style name="Theme.Peli_ya" parent="Base.Theme.Peli_ya" />
+
+    <style name="Theme.Peli_ya.ConBarra" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/bg_dark</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>
